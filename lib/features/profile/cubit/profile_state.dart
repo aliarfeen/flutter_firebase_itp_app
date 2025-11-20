@@ -15,6 +15,8 @@ class ProfileDataLoaded extends ProfileState {
 
 class ProfileUpdated extends ProfileState {}
 
+class ProfileSignedOut extends ProfileState {}
+
 class ProfileFailure extends ProfileState {
   final String errorMessage;
 

@@ -7,6 +7,7 @@ import 'package:flutter_firebase_itp_app/services/firebase_realtime_db.dart';
 import 'package:flutter_firebase_itp_app/services/firebase_user_service.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {
+  String userName = '';
   ProfileCubit() : super(ProfileInitial());
 
   Future<void> loadUserProfile() async {
@@ -15,6 +16,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       AppUser? user = await FirebaseUserService.instance.loadUserData(
         getCurrentUser()!.uid,
       );
+      userName = user?.displayName ?? '';
       emit(ProfileDataLoaded(user));
     } on FirebaseException catch (e) {
       emit(ProfileFailure(e.message ?? 'Unable to load user data'));
@@ -68,5 +70,27 @@ class ProfileCubit extends Cubit<ProfileState> {
     } on FirebaseException catch (e) {
       emit(ProfileFailure(e.message ?? 'Failed to update user data'));
     }
+  }
+
+  Future<void> signOut() async {
+    emit(ProfileLoading());
+    try {
+      await FirebaseAuthService.instance.signOut();
+      emit(ProfileSignedOut());
+    } catch (e) {
+      emit(ProfileFailure('Failed to sign out'));
+    }
+  }
+
+  Future<String> getUserName() async {
+    try {
+      AppUser? user = await FirebaseUserService.instance.loadUserData(
+        getCurrentUser()!.uid,
+      );
+      userName = user?.displayName ?? '';
+    } on FirebaseException catch (e) {
+      emit(ProfileFailure(e.message ?? 'Unable to load user data'));
+    }
+    return userName;
   }
 }

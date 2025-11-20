@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_firebase_itp_app/features/feed/cubit/posts_cubit.dart';
 import 'package:flutter_firebase_itp_app/features/feed/feed_page.dart';
+import 'package:flutter_firebase_itp_app/features/profile/cubit/profile_cubit.dart';
 import 'package:flutter_firebase_itp_app/features/splash/splash_cubit.dart';
 import 'package:flutter_firebase_itp_app/core/resources/app_colors.dart';
 import 'package:flutter_firebase_itp_app/core/utils/context_extension.dart';
@@ -28,8 +29,14 @@ class _SplashState extends State<Splash> {
     return BlocListener<SplashCubit, bool>(
       listener: (context, state) => state
           ? context.navigateReplacement(
-              BlocProvider(
-                create: (context) => PostsCubit()..subscribeToPosts(), //kinda hustle i know
+              MultiBlocProvider(
+                providers: [
+                  BlocProvider(
+                    create: (context) =>
+                        PostsCubit()..subscribeToPosts(), //kinda hustle i know
+                  ),
+                  BlocProvider(create: (context) => ProfileCubit()),
+                ],
                 child: FeedPage(),
               ),
             )

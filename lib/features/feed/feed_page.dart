@@ -4,54 +4,11 @@ import 'package:flutter_firebase_itp_app/core/resources/app_button_style.dart';
 import 'package:flutter_firebase_itp_app/features/feed/cubit/posts_cubit.dart';
 import 'package:flutter_firebase_itp_app/features/feed/data/models/post.dart';
 import 'package:flutter_firebase_itp_app/features/feed/post_details_page.dart';
+import 'package:flutter_firebase_itp_app/features/profile/cubit/profile_cubit.dart';
 
 class FeedPage extends StatelessWidget {
   final TextEditingController _postController = TextEditingController();
   FeedPage({super.key});
-
-  // final List<Post> _posts = [
-  //   Post(
-  //     id: '1',
-  //     content: 'This is a mock post to show how the feed works.',
-  //     userName: 'Admin',
-  //     comments: [],
-  //   ),
-  //   Post(
-  //     id: '2',
-  //     content: 'Here is another example post with some content.',
-  //     userName: 'User 123',
-  //     comments: [],
-  //   ),
-  //   Post(
-  //     id: '3',
-  //     content: 'Building apps with Flutter and Firebase is fun!',
-  //     userName: 'Flutter Dev',
-  //     comments: [],
-  //   ),
-  // ];
-
-  // @override
-  // void dispose() {
-  //   _postController.dispose();
-  //   super.dispose();
-  // }
-
-  // void _addPost() {
-  //   final text = _postController.text.trim();
-  //   if (text.isEmpty) return;
-  //   setState(() {
-  //     _posts.insert(
-  //       0,
-  //       Post(
-  //         id: DateTime.now().millisecondsSinceEpoch.toString(),
-  //         content: text,
-  //         userName: 'You',
-  //         comments: [],
-  //       ),
-  //     );
-  //     _postController.clear();
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +18,9 @@ class FeedPage extends StatelessWidget {
       },
       builder: (context, state) {
         if (state is PostsLoading) {
+          context.read<ProfileCubit>().getCurrentUser();
+          context.read<ProfileCubit>().getUserName();
+
           return const Center(child: CircularProgressIndicator());
         }
         if (state is PostsFailure) {
@@ -100,7 +60,8 @@ class FeedPage extends StatelessWidget {
                               id: DateTime.now().millisecondsSinceEpoch
                                   .toString(),
                               content: _postController.text.trim(),
-                              userName: 'You',
+                              //userName: context.read<ProfileCubit>().userName,
+                              userName: 'Ali Hesham',
                               comments: [],
                             ),
                           ),
@@ -119,7 +80,11 @@ class FeedPage extends StatelessWidget {
                     separatorBuilder: (_, __) => const SizedBox(height: 12),
                     itemBuilder: (context, index) {
                       final post = _posts[index];
-                      return Card(
+                      return Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey[100],
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                         child: ListTile(
                           title: Text(post.userName),
                           subtitle: Text(
