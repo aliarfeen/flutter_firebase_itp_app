@@ -30,9 +30,4 @@ class Post {
           : List<String>.from(json['comments'] as List),
     );
   }
-
-  @override //dont know why but i wanted to create it
-  String toString() {
-    return 'Post{id: $id, content: $content, userName: $userName, comments: []}';
-  }
 }
